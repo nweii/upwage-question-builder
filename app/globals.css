@@ -4,13 +4,8 @@
 
 @layer base {
   body {
-    @apply bg-zinc-50 text-base dark:bg-zinc-800;
+    @apply bg-zinc-50 text-base text-black dark:bg-zinc-800 dark:text-white/80;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  font-size: 1rem;
 }
 
 @layer utilities {
