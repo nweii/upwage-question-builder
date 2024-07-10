@@ -40,5 +40,5 @@ export const generateNumberOutput = (
     .map((c) => `${getOperator(c.comparison)}${c.value}`)
     .join(combinator === "and" ? "&" : "|");
 
-  return `qualifying,false,[${conditionString}]"${question}",I9,number`;
+  return `qualifying,false,[${conditionString}]"${question}",number`;
 };
