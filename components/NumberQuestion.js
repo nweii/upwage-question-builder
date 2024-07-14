@@ -111,7 +111,7 @@ const NumberQuestion = () => {
               </Button>
             </div>
             {index === 0 && conditions.length > 1 && (
-              <div className="ml-14 mt-2">
+              <div className="mt-2">
                 <Select
                   value={combinator}
                   onChange={(e) => setCombinator(e.target.value)}
