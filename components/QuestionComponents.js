@@ -45,7 +45,8 @@ export const Button = ({
   const variantClasses = {
     primary: "bg-accent hover:bg-accent/90",
     secondary: "text-zinc-500 hover:text-accent",
-    delete: "hover:bg-zinc-800/10 dark:hover:bg-zinc-200/10",
+    delete:
+      "hover:text-red-800 dark:hover:text-red-300 hover:bg-red-600/10 dark:hover:bg-red-400/10",
   };
 
   return (
