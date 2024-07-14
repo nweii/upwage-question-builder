@@ -6,6 +6,10 @@
   body {
     @apply bg-zinc-50 text-base text-black dark:bg-zinc-800 dark:text-white/80;
   }
+
+  hr {
+    @apply border-black border-opacity-20 dark:border-white dark:border-opacity-20;
+  }
 }
 
 @layer utilities {
