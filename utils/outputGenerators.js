@@ -53,9 +53,9 @@ const generateYesNoOutput = (
     return `qualifying,${keyQuestionValue},"${question}",""${alias}"",yes_no`;
   }
   const conditionString = conditions
-    .map((c) => `${c.condition === "is" ? "" : "!"}\"${c.answer}\"`)
+    .map((c) => `${c.condition === "is" ? "" : "!"}${c.answer}`)
     .join(combinator === "and" ? "&" : "|");
-  return `qualifying,${keyQuestionValue},["${conditionString}"]""${question}"",""${alias}"",yes_no`;
+  return `qualifying,${keyQuestionValue},[""${conditionString}""]""${question}"",""${alias}"",yes_no`;
 };
 
 const generateNumberOutput = (
