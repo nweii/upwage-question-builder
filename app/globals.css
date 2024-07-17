@@ -8,7 +8,7 @@
   }
 
   hr {
-    @apply border-black border-opacity-20 dark:border-white dark:border-opacity-20;
+    @apply my-6 border-black border-opacity-20 dark:border-white dark:border-opacity-20;
   }
 }
 

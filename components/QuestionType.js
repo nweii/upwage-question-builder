@@ -69,7 +69,7 @@ const QuestionType = ({
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-      <div className="mb-4">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="flex grow flex-col">
             <label className="mb-2 block font-semibold">Question</label>
@@ -88,16 +88,16 @@ const QuestionType = ({
             />
           </div>
         </div>
+        <div className="flex flex-row gap-4">
+          <Checkbox
+            label="Key question"
+            checked={isKeyQuestion}
+            onChange={(e) => setIsKeyQuestion(e.target.checked)}
+          ></Checkbox>
+          {options.renderAdditionalOptions && options.renderAdditionalOptions()}
+        </div>
       </div>
-      <div className="flex flex-row gap-4">
-        <Checkbox
-          label="Key question"
-          checked={isKeyQuestion}
-          onChange={(e) => setIsKeyQuestion(e.target.checked)}
-        ></Checkbox>
-        {options.renderAdditionalOptions && options.renderAdditionalOptions()}
-      </div>
-      <hr className="my-4" />
+      <hr />
       <div className="my-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="font-semibold">Qualifying Conditions</h3>
@@ -123,45 +123,43 @@ const QuestionType = ({
           </Button>
         </div>
         {showDetails && (
-          <>
-            {conditions.map((condition, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && (
-                  <div className="my-2">
-                    <Select
-                      value={combinator}
-                      onChange={(e) => setCombinator(e.target.value)}
-                      options={[
-                        { value: "and", label: "and" },
-                        { value: "or", label: "or" },
-                      ]}
-                    />
-                  </div>
-                )}
-                <ConditionInput
-                  type={type}
-                  condition={condition}
-                  onChange={(newValue) =>
-                    handleConditionChange(index, newValue)
-                  }
-                  onRemove={() => handleRemoveCondition(index)}
-                  options={options}
-                />
-              </React.Fragment>
-            ))}
+          <div className="flex flex-col gap-2">
+            <>
+              {conditions.map((condition, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && (
+                    <div className="my-2">
+                      <Select
+                        value={combinator}
+                        onChange={(e) => setCombinator(e.target.value)}
+                        options={[
+                          { value: "and", label: "and" },
+                          { value: "or", label: "or" },
+                        ]}
+                      />
+                    </div>
+                  )}
+                  <ConditionInput
+                    type={type}
+                    condition={condition}
+                    onChange={(newValue) =>
+                      handleConditionChange(index, newValue)
+                    }
+                    onRemove={() => handleRemoveCondition(index)}
+                    options={options}
+                  />
+                </React.Fragment>
+              ))}
+            </>
             {conditions.length < maxConditions && (
-              <Button
-                onClick={handleAddCondition}
-                variant="secondary"
-                className="mt-2"
-              >
+              <Button onClick={handleAddCondition} variant="secondary">
                 + Add condition
               </Button>
             )}
-          </>
+          </div>
         )}
       </div>
-      <hr className="my-4" />
+      <hr />
       <div className="mt-4">
         <h3 className="mb-2 font-semibold">Output</h3>
         <textarea
