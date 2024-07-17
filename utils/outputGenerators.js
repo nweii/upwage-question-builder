@@ -1,16 +1,25 @@
 export const generateOutput = (
   type,
   question,
+  isKeyQuestion,
   conditions,
   combinator,
   options,
 ) => {
+  const keyQuestionValue = isKeyQuestion ? "true" : "false"; // convert to string
+
   switch (type) {
     case "yes_no":
-      return generateYesNoOutput(question, conditions, combinator);
+      return generateYesNoOutput(
+        question,
+        keyQuestionValue,
+        conditions,
+        combinator,
+      );
     case "number":
       return generateNumberOutput(
         question,
+        keyQuestionValue,
         conditions,
         combinator,
         options.allowDecimals,
@@ -18,6 +27,7 @@ export const generateOutput = (
     case "multiple_choice":
       return generateMultipleChoiceOutput(
         question,
+        keyQuestionValue,
         conditions,
         combinator,
         options.choices,
@@ -28,24 +38,30 @@ export const generateOutput = (
   }
 };
 
-const generateYesNoOutput = (question, conditions, combinator) => {
+const generateYesNoOutput = (
+  question,
+  keyQuestionValue,
+  conditions,
+  combinator,
+) => {
   if (conditions.length === 0) {
-    return `qualifying,false,"${question}",I9,yes_no`;
+    return `qualifying,${keyQuestionValue},"${question}",I9,yes_no`;
   }
   const conditionString = conditions
     .map((c) => `${c.condition === "is" ? "" : "!"}\"${c.answer}\"`)
     .join(combinator === "and" ? "&" : "|");
-  return `qualifying,false,["${conditionString}"]""${question}"",I9,yes_no`;
+  return `qualifying,${keyQuestionValue},["${conditionString}"]""${question}"",I9,yes_no`;
 };
 
 const generateNumberOutput = (
   question,
+  keyQuestionValue,
   conditions,
   combinator,
   allowDecimals,
 ) => {
   if (conditions.length === 0) {
-    return `qualifying,false,"${question}",I9,number`;
+    return `qualifying,${keyQuestionValue},"${question}",I9,number`;
   }
   const conditionString = conditions
     .map((c) => {
@@ -75,18 +91,19 @@ const generateNumberOutput = (
       return `${operator}${c.value}`;
     })
     .join(combinator === "and" ? "&" : "|");
-  return `qualifying,false,[${conditionString}]""${question}"",I9,number`;
+  return `qualifying,${keyQuestionValue},[${conditionString}]""${question}"",I9,number`;
 };
 
 const generateMultipleChoiceOutput = (
   question,
+  keyQuestionValue,
   conditions,
   combinator,
   choices,
   isMultiSelect,
 ) => {
   if (conditions.length === 0) {
-    return `qualifying,false,""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
+    return `qualifying,${keyQuestionValue},""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
   }
   const conditionString = conditions
     .map((c) => {
@@ -110,5 +127,5 @@ const generateMultipleChoiceOutput = (
       return `${prefix}"${c.answer}"`;
     })
     .join(combinator === "and" ? "&" : "|");
-  return `qualifying,false,[${conditionString}]""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
+  return `qualifying,${keyQuestionValue},[${conditionString}]""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
 };

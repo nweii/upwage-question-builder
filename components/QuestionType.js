@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { TextInput, Button, Select } from "./FormComponents";
+import { TextInput, Button, Select, Checkbox } from "./FormComponents";
 import ConditionInput from "./ConditionInput";
 import { generateOutput } from "../utils/outputGenerators";
 
@@ -11,6 +11,7 @@ const QuestionType = ({
   options,
 }) => {
   const [question, setQuestion] = useState(initialQuestion);
+  const [isKeyQuestion, setIsKeyQuestion] = useState(false);
   const [conditions, setConditions] = useState(initialConditions);
   const [combinator, setCombinator] = useState("and");
   const [showDetails, setShowDetails] = useState(true);
@@ -20,8 +21,17 @@ const QuestionType = ({
   const maxConditions = options.maxConditions || 3;
 
   useEffect(() => {
-    setOutput(generateOutput(type, question, conditions, combinator, options));
-  }, [type, question, conditions, combinator, options]);
+    setOutput(
+      generateOutput(
+        type,
+        question,
+        isKeyQuestion,
+        conditions,
+        combinator,
+        options,
+      ),
+    );
+  }, [type, question, isKeyQuestion, conditions, combinator, options]);
 
   useEffect(() => {
     setCopyStatus("Copy");
@@ -69,7 +79,14 @@ const QuestionType = ({
           </Button>
         </div>
       </div>
-      {options.renderAdditionalOptions && options.renderAdditionalOptions()}
+      <div className="flex flex-row gap-4">
+        <Checkbox
+          label="Key question"
+          checked={isKeyQuestion}
+          onChange={(e) => setIsKeyQuestion(e.target.checked)}
+        ></Checkbox>
+        {options.renderAdditionalOptions && options.renderAdditionalOptions()}
+      </div>
       <hr className="my-4" />
       <div className="my-4">
         <div className="mb-2 flex items-center justify-between">
