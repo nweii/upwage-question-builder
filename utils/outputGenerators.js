@@ -1,44 +1,114 @@
-export const generateYesNoOutput = (
+export const generateOutput = (
+  type,
   question,
-  hasQualifyingCondition,
-  condition,
-  answer,
+  conditions,
+  combinator,
+  options,
 ) => {
-  if (hasQualifyingCondition) {
-    return `qualifying,false,[=${condition === "is" ? "" : "!"}${answer === "any" ? '""yes""|""no""' : `\"\"${answer}\"\"`}]\"\"${question}\"\",yes_no`;
-  } else {
-    return `qualifying,false,\"\"${question}\"\",yes_no`;
+  switch (type) {
+    case "yes_no":
+      return generateYesNoOutput(question, conditions, combinator);
+    case "number":
+      return generateNumberOutput(
+        question,
+        conditions,
+        combinator,
+        options.allowDecimals,
+      );
+    case "multiple_choice":
+      return generateMultipleChoiceOutput(
+        question,
+        conditions,
+        combinator,
+        options.choices,
+        options.isMultiSelect,
+      );
+    default:
+      return "";
   }
 };
 
-export const generateNumberOutput = (
+const generateYesNoOutput = (question, conditions, combinator) => {
+  if (conditions.length === 0) {
+    return `qualifying,false,"${question}",I9,yes_no`;
+  }
+  const conditionString = conditions
+    .map((c) => `${c.condition === "is" ? "" : "!"}\"${c.answer}\"`)
+    .join(combinator === "and" ? "&" : "|");
+  return `qualifying,false,["${conditionString}"]""${question}"",I9,yes_no`;
+};
+
+const generateNumberOutput = (
   question,
-  allowDecimals,
   conditions,
   combinator,
+  allowDecimals,
 ) => {
-  const getOperator = (comparison) => {
-    switch (comparison) {
-      case "equals":
-        return "=";
-      case "does not equal":
-        return "!=";
-      case "is greater than":
-        return ">";
-      case "is less than":
-        return "<";
-      case "is greater than or equal to":
-        return ">=";
-      case "is less than or equal to":
-        return "<=";
-      default:
-        return "=";
-    }
-  };
-
+  if (conditions.length === 0) {
+    return `qualifying,false,"${question}",I9,number`;
+  }
   const conditionString = conditions
-    .map((c) => `${getOperator(c.comparison)}${c.value}`)
+    .map((c) => {
+      let operator;
+      switch (c.comparison) {
+        case "equals":
+          operator = "=";
+          break;
+        case "does not equal":
+          operator = "!=";
+          break;
+        case "is greater than":
+          operator = ">";
+          break;
+        case "is less than":
+          operator = "<";
+          break;
+        case "is greater than or equal to":
+          operator = ">=";
+          break;
+        case "is less than or equal to":
+          operator = "<=";
+          break;
+        default:
+          operator = "=";
+      }
+      return `${operator}${c.value}`;
+    })
     .join(combinator === "and" ? "&" : "|");
+  return `qualifying,false,[${conditionString}]""${question}"",I9,number`;
+};
 
-  return `qualifying,false,[${conditionString}]"${question}",number`;
+const generateMultipleChoiceOutput = (
+  question,
+  conditions,
+  combinator,
+  choices,
+  isMultiSelect,
+) => {
+  if (conditions.length === 0) {
+    return `qualifying,false,""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
+  }
+  const conditionString = conditions
+    .map((c) => {
+      let prefix;
+      switch (c.modifier) {
+        case "is":
+          prefix = "";
+          break;
+        case "is not":
+          prefix = "!";
+          break;
+        case "includes":
+          prefix = "+";
+          break;
+        case "does not include":
+          prefix = "-";
+          break;
+        default:
+          prefix = "";
+      }
+      return `${prefix}"${c.answer}"`;
+    })
+    .join(combinator === "and" ? "&" : "|");
+  return `qualifying,false,[${conditionString}]""${question}"",I9,${isMultiSelect ? "multiple" : "single"}_choice`;
 };
