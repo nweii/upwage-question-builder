@@ -44,7 +44,8 @@ export const Button = ({
     "rounded-md px-3 py-2 font-semibold transition duration-200 ease-in-out";
   const variantClasses = {
     primary: "bg-accent hover:bg-accent/50 dark:text-zinc-900",
-    secondary: "text-zinc-500 hover:text-accent",
+    secondary:
+      "text-zinc-500 hover:text-accent flex items-center inline-flex gap-x-1",
     delete:
       "hover:text-red-800 dark:hover:text-red-300 hover:bg-red-600/10 dark:hover:bg-red-400/10",
   };
