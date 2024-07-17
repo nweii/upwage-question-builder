@@ -8,3 +8,4 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 - [ ] Add checkbox to specify whether key question status
 - [ ] Add text field to specify short question alias
 - [ ] Add multiple choice question types (single and multi select)
+- [ ] Reduce repetitive areas
