@@ -80,7 +80,7 @@ const QuestionType = ({
           >
             {showDetails ? "Hide details" : "Show details"}
             <svg
-              className={`ml-1 h-4 w-4 transform ${showDetails ? "rotate-180" : ""}`}
+              className={`ml-1 h-4 w-4 transform transition-transform ${showDetails ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
