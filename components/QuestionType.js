@@ -7,10 +7,12 @@ import { generateOutput } from "../utils/outputGenerators";
 const QuestionType = ({
   type,
   initialQuestion,
+  initialAlias,
   initialConditions,
   options,
 }) => {
   const [question, setQuestion] = useState(initialQuestion);
+  const [alias, setAlias] = useState(initialAlias);
   const [isKeyQuestion, setIsKeyQuestion] = useState(false);
   const [conditions, setConditions] = useState(initialConditions);
   const [combinator, setCombinator] = useState("and");
@@ -25,13 +27,14 @@ const QuestionType = ({
       generateOutput(
         type,
         question,
+        alias,
         isKeyQuestion,
         conditions,
         combinator,
         options,
       ),
     );
-  }, [type, question, isKeyQuestion, conditions, combinator, options]);
+  }, [type, question, alias, isKeyQuestion, conditions, combinator, options]);
 
   useEffect(() => {
     setCopyStatus("Copy");
@@ -67,16 +70,23 @@ const QuestionType = ({
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
       <div className="mb-4">
-        <label className="mb-2 block font-semibold">Question 1</label>
-        <div className="flex items-center">
-          <TextInput
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Enter your question"
-          />
-          <Button disabled variant="delete" className="ml-2">
-            Delete
-          </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex grow flex-col">
+            <label className="mb-2 block font-semibold">Question</label>
+            <TextInput
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Enter your question"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="mb-2 block font-semibold">Alias</label>
+            <TextInput
+              value={initialAlias}
+              onChange={(e) => setAlias(e.target.value)}
+              placeholder="Enter a shortname for the question"
+            />
+          </div>
         </div>
       </div>
       <div className="flex flex-row gap-4">

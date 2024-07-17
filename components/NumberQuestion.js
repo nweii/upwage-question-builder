@@ -22,6 +22,7 @@ const NumberQuestion = () => {
     <QuestionType
       type="number"
       initialQuestion="About how many years of food service experience do you have?"
+      initialAlias="Exp"
       initialConditions={[
         { comparison: "is greater than or equal to", value: 1 },
       ]}
