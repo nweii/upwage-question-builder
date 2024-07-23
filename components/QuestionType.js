@@ -15,7 +15,6 @@ const QuestionType = ({
   const [alias, setAlias] = useState(initialAlias);
   const [isKeyQuestion, setIsKeyQuestion] = useState(false);
   const [conditions, setConditions] = useState(initialConditions);
-  const [combinator, setCombinator] = useState("and");
   const [showDetails, setShowDetails] = useState(true);
   const [output, setOutput] = useState("");
   const [copyStatus, setCopyStatus] = useState("Copy");
@@ -25,17 +24,9 @@ const QuestionType = ({
   // Update output field upon changes
   useEffect(() => {
     setOutput(
-      generateOutput(
-        type,
-        question,
-        alias,
-        isKeyQuestion,
-        conditions,
-        combinator,
-        options,
-      ),
+      generateOutput(type, question, alias, isKeyQuestion, conditions, options),
     );
-  }, [type, question, alias, isKeyQuestion, conditions, combinator, options]);
+  }, [type, question, alias, isKeyQuestion, conditions, options]);
 
   // Reset copy button text when things change
   useEffect(() => {
@@ -132,8 +123,12 @@ const QuestionType = ({
                   {index > 0 && (
                     <div className="my-2">
                       <Select
-                        value={combinator}
-                        onChange={(e) => setCombinator(e.target.value)}
+                        value={condition.combinator}
+                        onChange={(e) =>
+                          handleConditionChange(index, {
+                            combinator: e.target.value,
+                          })
+                        }
                         options={[
                           { value: "and", label: "and" },
                           { value: "or", label: "or" },
