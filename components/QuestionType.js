@@ -42,7 +42,7 @@ const QuestionType = ({
     setCopyStatus("Copy");
   }, [output]);
 
-  const handleAddCondition = () => {
+  const addCondition = () => {
     if (conditions.length < maxConditions && initialConditions.length > 0) {
       // Copy the first initial condition to create a new one
       const newCondition = JSON.parse(JSON.stringify(initialConditions[0]));
@@ -50,7 +50,7 @@ const QuestionType = ({
     }
   };
 
-  const handleRemoveCondition = (index) => {
+  const removeCondition = (index) => {
     setConditions(conditions.filter((_, i) => i !== index));
   };
 
@@ -147,14 +147,14 @@ const QuestionType = ({
                     onChange={(newValue) =>
                       handleConditionChange(index, newValue)
                     }
-                    onRemove={() => handleRemoveCondition(index)}
+                    onRemove={() => removeCondition(index)}
                     options={options}
                   />
                 </React.Fragment>
               ))}
             </>
             {conditions.length < maxConditions && (
-              <Button onClick={handleAddCondition} variant="secondary">
+              <Button onClick={addCondition} variant="secondary">
                 + Add condition
               </Button>
             )}
