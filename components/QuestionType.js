@@ -45,7 +45,7 @@ const QuestionType = ({
   const handleAddCondition = () => {
     if (conditions.length < maxConditions && initialConditions.length > 0) {
       // Copy the first initial condition to create a new one
-      const newCondition = { ...initialConditions[0] };
+      const newCondition = JSON.parse(JSON.stringify(initialConditions[0]));
       setConditions([...conditions, newCondition]);
     }
   };
