@@ -22,6 +22,7 @@ const QuestionType = ({
 
   const maxConditions = options.maxConditions || 3;
 
+  // Update output field upon changes
   useEffect(() => {
     setOutput(
       generateOutput(
@@ -36,6 +37,7 @@ const QuestionType = ({
     );
   }, [type, question, alias, isKeyQuestion, conditions, combinator, options]);
 
+  // Reset copy button text when things change
   useEffect(() => {
     setCopyStatus("Copy");
   }, [output]);
