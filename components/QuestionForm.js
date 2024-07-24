@@ -1,43 +1,41 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { TextInput, Button, Select, Checkbox } from "./FormComponents";
+import { TextInput, Select, Button, Checkbox } from "./FormComponents";
 import ConditionInput from "./ConditionInput";
-import { generateOutput } from "../utils/outputGenerators";
+import { questionTypes } from "../config/questionTypes";
 
-const QuestionType = ({
-  type,
-  initialQuestion,
-  initialAlias,
-  initialConditions,
-  options,
-}) => {
-  const [question, setQuestion] = useState(initialQuestion);
-  const [alias, setAlias] = useState(initialAlias);
+export const QuestionForm = ({ type }) => {
+  const config = questionTypes[type];
+  const [question, setQuestion] = useState(config.initialQuestion);
+  const [alias, setAlias] = useState(config.initialAlias);
   const [isKeyQuestion, setIsKeyQuestion] = useState(false);
-  const [conditions, setConditions] = useState(initialConditions);
-  const [showDetails, setShowDetails] = useState(true);
+  const [conditions, setConditions] = useState(config.initialConditions);
   const [output, setOutput] = useState("");
+  const [showDetails, setShowDetails] = useState(true);
   const [copyStatus, setCopyStatus] = useState("Copy");
+  const [allowDecimals, setAllowDecimals] = useState(
+    config.options.allowDecimals,
+  );
 
-  const maxConditions = options.maxConditions || 3;
-
-  // Update output field upon changes
   useEffect(() => {
     setOutput(
-      generateOutput(type, question, alias, isKeyQuestion, conditions, options),
+      config.generateOutput(question, alias, isKeyQuestion, conditions, {
+        ...config.options,
+        allowDecimals,
+      }),
     );
-  }, [type, question, alias, isKeyQuestion, conditions, options]);
+  }, [question, alias, isKeyQuestion, conditions, config, allowDecimals]);
 
-  // Reset copy button text when things change
   useEffect(() => {
     setCopyStatus("Copy");
   }, [output]);
 
   const addCondition = () => {
-    if (conditions.length < maxConditions && initialConditions.length > 0) {
-      // Copy the first initial condition to create a new one
-      const newCondition = JSON.parse(JSON.stringify(initialConditions[0]));
-      setConditions([...conditions, newCondition]);
+    if (conditions.length < config.options.maxConditions) {
+      setConditions([
+        ...conditions,
+        { ...config.initialConditions[0], combinator: "and" },
+      ]);
     }
   };
 
@@ -45,16 +43,16 @@ const QuestionType = ({
     setConditions(conditions.filter((_, i) => i !== index));
   };
 
-  const handleConditionChange = (index, newValue) => {
+  const handleConditionChange = (index, newCondition) => {
     const newConditions = [...conditions];
-    newConditions[index] = { ...newConditions[index], ...newValue };
+    newConditions[index] = newCondition;
     setConditions(newConditions);
   };
 
   const handleCopying = async () => {
     try {
       await navigator.clipboard.writeText(output);
-      setCopyStatus("Copied");
+      setCopyStatus("Copied ✔︎");
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
@@ -75,9 +73,9 @@ const QuestionType = ({
           <div className="flex flex-col">
             <label className="mb-2 block font-semibold">Alias</label>
             <TextInput
-              value={initialAlias}
+              value={alias}
               onChange={(e) => setAlias(e.target.value)}
-              placeholder="Enter a shortname for the question"
+              placeholder="Enter alias"
             />
           </div>
         </div>
@@ -86,8 +84,12 @@ const QuestionType = ({
             label="Key question"
             checked={isKeyQuestion}
             onChange={(e) => setIsKeyQuestion(e.target.checked)}
-          ></Checkbox>
-          {options.renderAdditionalOptions && options.renderAdditionalOptions()}
+          />
+          {config.options.renderAdditionalOptions &&
+            config.options.renderAdditionalOptions(
+              allowDecimals,
+              setAllowDecimals,
+            )}
         </div>
       </div>
       <hr />
@@ -117,38 +119,37 @@ const QuestionType = ({
         </div>
         {showDetails && (
           <div className="flex flex-col gap-2">
-            <>
-              {conditions.map((condition, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && (
-                    <div className="my-2">
-                      <Select
-                        value={condition.combinator}
-                        onChange={(e) =>
-                          handleConditionChange(index, {
-                            combinator: e.target.value,
-                          })
-                        }
-                        options={[
-                          { value: "and", label: "and" },
-                          { value: "or", label: "or" },
-                        ]}
-                      />
-                    </div>
-                  )}
-                  <ConditionInput
-                    type={type}
-                    condition={condition}
-                    onChange={(newValue) =>
-                      handleConditionChange(index, newValue)
-                    }
-                    onRemove={() => removeCondition(index)}
-                    options={options}
-                  />
-                </React.Fragment>
-              ))}
-            </>
-            {conditions.length < maxConditions && (
+            {conditions.map((condition, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && (
+                  <div className="my-2">
+                    <Select
+                      value={condition.combinator}
+                      onChange={(e) =>
+                        handleConditionChange(index, {
+                          ...condition,
+                          combinator: e.target.value,
+                        })
+                      }
+                      options={[
+                        { value: "and", label: "and" },
+                        { value: "or", label: "or" },
+                      ]}
+                    />
+                  </div>
+                )}
+                <ConditionInput
+                  type={type}
+                  condition={condition}
+                  onChange={(newValue) =>
+                    handleConditionChange(index, newValue)
+                  }
+                  onRemove={() => removeCondition(index)}
+                  options={config.options}
+                />
+              </React.Fragment>
+            ))}
+            {conditions.length < config.options.maxConditions && (
               <Button onClick={addCondition} variant="secondary">
                 + Add condition
               </Button>
@@ -173,4 +174,4 @@ const QuestionType = ({
   );
 };
 
-export default QuestionType;
+export default QuestionForm;

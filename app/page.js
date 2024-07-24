@@ -1,5 +1,4 @@
-import NumberQuestion from "@/components/NumberQuestion";
-import YesNo from "../components/YesNo";
+import QuestionForm from "/components/QuestionForm";
 
 export default function Home() {
   return (
@@ -9,13 +8,13 @@ export default function Home() {
         <h2 className="mb-6 text-xl font-semibold text-black/70 dark:text-white/70">
           Yes/No
         </h2>
-        <YesNo />
+        <QuestionForm type="yes_no" />
       </section>
       <section>
         <h2 className="mb-6 text-xl font-semibold text-black/70 dark:text-white/70">
           Number
         </h2>
-        <NumberQuestion />
+        <QuestionForm type="number" />
       </section>
     </main>
   );
