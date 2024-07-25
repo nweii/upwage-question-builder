@@ -11,16 +11,9 @@ const LittleCircle = () => (
     viewBox="0 0 12 12"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="opacity-30"
+    className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
   >
-    <circle
-      cx="6"
-      cy="6"
-      r="5"
-      stroke="black"
-      strokeOpacity="1"
-      strokeWidth="2"
-    />
+    <circle cx="6" cy="6" r="5" strokeOpacity="1" strokeWidth="2" />
   </svg>
 );
 
@@ -31,7 +24,7 @@ const LittleRect = () => (
     viewBox="0 0 12 12"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="opacity-30"
+    className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
   >
     <rect
       x={1}
@@ -39,7 +32,6 @@ const LittleRect = () => (
       width={10}
       height={10}
       rx={2}
-      stroke="black"
       style={{ strokeOpacity: 1 }}
       strokeWidth={2}
     />
