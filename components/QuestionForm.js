@@ -104,6 +104,7 @@ export const QuestionForm = ({ type }) => {
     }
   };
 
+  // Choices are for multiple choice question types only
   const addChoice = () => {
     if (choices.length < config.options.maxChoices) {
       setChoices([...choices, { value: "", label: "" }]);
