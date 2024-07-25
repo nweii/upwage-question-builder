@@ -16,6 +16,18 @@ export default function Home() {
         </h2>
         <QuestionForm type="number" />
       </section>
+      <section>
+        <h2 className="mb-6 text-xl font-semibold text-black/70 dark:text-white/70">
+          Single Select
+        </h2>
+        <QuestionForm type="single_select" />
+      </section>
+      <section>
+        <h2 className="mb-6 text-xl font-semibold text-black/70 dark:text-white/70">
+          Multi Select
+        </h2>
+        <QuestionForm type="multi_select" />
+      </section>
     </main>
   );
 }

@@ -1,6 +1,8 @@
 import {
   generateYesNoOutput,
   generateNumberOutput,
+  generateMultipleChoiceSingleOutput,
+  generateMultipleChoiceMultiOutput,
 } from "../utils/outputGenerators";
 import { Checkbox } from "../components/FormComponents";
 
@@ -28,13 +30,11 @@ export const questionTypes = {
     initialQuestion:
       "About how many years of food service experience do you have?",
     initialAlias: "Exp",
-    initialConditions: [
-      { comparison: "is greater than or equal to", value: 1 },
-    ],
+    initialConditions: [{ condition: "is greater than or equal to", value: 1 }],
     options: {
       maxConditions: 2,
       allowDecimals: false,
-      comparisonOptions: [
+      conditionOptions: [
         { value: "equals", label: "equals" },
         { value: "does not equal", label: "does not equal" },
         { value: "is greater than", label: "is greater than" },
@@ -57,5 +57,37 @@ export const questionTypes = {
       ),
     },
     generateOutput: generateNumberOutput,
+  },
+  single_select: {
+    type: "single_select",
+    initialQuestion: "What is your preferred work schedule?",
+    initialAlias: "WorkSchedule",
+    initialConditions: [{ condition: "is", answer: "" }],
+    options: {
+      maxConditions: 3,
+      maxChoices: 7,
+      conditionOptions: [
+        { value: "is", label: "is" },
+        { value: "is not", label: "is not" },
+      ],
+      answerOptions: [],
+    },
+    generateOutput: generateMultipleChoiceSingleOutput,
+  },
+  multi_select: {
+    type: "multi_select",
+    initialQuestion: "Which of the following skills do you possess?",
+    initialAlias: "Skills",
+    initialConditions: [{ condition: "includes", answer: "" }],
+    options: {
+      maxConditions: 3,
+      maxChoices: 7,
+      conditionOptions: [
+        { value: "includes", label: "includes" },
+        { value: "does not include", label: "does not include" },
+      ],
+      answerOptions: [],
+    },
+    generateOutput: generateMultipleChoiceMultiOutput,
   },
 };

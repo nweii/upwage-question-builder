@@ -52,12 +52,13 @@ export const Button = ({
     delete:
       "px-3 py-2 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-600/10 dark:hover:bg-red-400/10",
   };
+  const extraClasses = className;
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]} ${className} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${extraClasses} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {children}
     </button>

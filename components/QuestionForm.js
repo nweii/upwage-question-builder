@@ -4,6 +4,48 @@ import { TextInput, Select, Button, Checkbox } from "./FormComponents";
 import ConditionInput from "./ConditionInput";
 import { questionTypes } from "../config/questionTypes";
 
+const LittleCircle = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="opacity-30"
+  >
+    <circle
+      cx="6"
+      cy="6"
+      r="5"
+      stroke="black"
+      strokeOpacity="1"
+      strokeWidth="2"
+    />
+  </svg>
+);
+
+const LittleRect = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="opacity-30"
+  >
+    <rect
+      x={1}
+      y={1}
+      width={10}
+      height={10}
+      rx={2}
+      stroke="black"
+      style={{ strokeOpacity: 1 }}
+      strokeWidth={2}
+    />
+  </svg>
+);
+
 export const QuestionForm = ({ type }) => {
   const config = questionTypes[type];
   const [question, setQuestion] = useState(config.initialQuestion);
@@ -16,15 +58,19 @@ export const QuestionForm = ({ type }) => {
   const [allowDecimals, setAllowDecimals] = useState(
     config.options.allowDecimals,
   );
+  const [choices, setChoices] = useState(config.options.answerOptions || []);
 
   useEffect(() => {
     setOutput(
-      config.generateOutput(question, alias, isKeyQuestion, conditions, {
-        ...config.options,
-        allowDecimals,
-      }),
+      config.generateOutput(
+        question,
+        alias,
+        isKeyQuestion,
+        conditions,
+        choices,
+      ),
     );
-  }, [question, alias, isKeyQuestion, conditions, config, allowDecimals]);
+  }, [question, alias, isKeyQuestion, conditions, config, choices]);
 
   useEffect(() => {
     setCopyStatus("Copy");
@@ -56,6 +102,26 @@ export const QuestionForm = ({ type }) => {
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
+  };
+
+  const addChoice = () => {
+    if (choices.length < config.options.maxChoices) {
+      setChoices([...choices, { value: "", label: "" }]);
+    }
+  };
+
+  const removeChoice = (index) => {
+    setChoices(choices.filter((_, i) => i !== index));
+  };
+
+  const updateChoice = (index, field, value) => {
+    const newChoices = [...choices];
+    newChoices[index] = { ...newChoices[index], [field]: value };
+    // If updating the label, also update the value if it's empty
+    if (field === "label" && !newChoices[index].value) {
+      newChoices[index].value = value;
+    }
+    setChoices(newChoices);
   };
 
   return (
@@ -92,7 +158,40 @@ export const QuestionForm = ({ type }) => {
             )}
         </div>
       </div>
-      <hr />
+      {(type === "multi_select" || type === "single_select") && (
+        <div className="mt-4">
+          <div className="flex flex-col gap-2">
+            {choices.map((choice, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="flex grow flex-row items-center gap-6">
+                  {type === "multi_select" ? <LittleRect /> : <LittleCircle />}
+                  <TextInput
+                    value={choice.label}
+                    onChange={(e) =>
+                      updateChoice(index, "label", e.target.value)
+                    }
+                    placeholder={`Choice ${index + 1}`}
+                    className="grow"
+                  />
+                </div>
+                <Button onClick={() => removeChoice(index)} variant="delete">
+                  Remove
+                </Button>
+              </div>
+            ))}
+            {choices.length < config.options.maxChoices && (
+              <Button
+                onClick={addChoice}
+                variant="secondary"
+                className={choices.length && "ml-9"}
+              >
+                + Add choice
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+      <hr className="my-4" />
       <div className="my-4">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="font-semibold">Qualifying Conditions</h3>
@@ -102,7 +201,9 @@ export const QuestionForm = ({ type }) => {
           >
             {showDetails ? "Hide details" : "Show details"}
             <svg
-              className={`ml-1 h-4 w-4 transform transition-transform ${showDetails ? "rotate-180" : ""}`}
+              className={`ml-1 h-4 w-4 transform transition-transform ${
+                showDetails ? "rotate-180" : ""
+              }`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -145,7 +246,10 @@ export const QuestionForm = ({ type }) => {
                     handleConditionChange(index, newValue)
                   }
                   onRemove={() => removeCondition(index)}
-                  options={config.options}
+                  options={{
+                    ...config.options,
+                    answerOptions: choices,
+                  }}
                 />
               </React.Fragment>
             ))}
