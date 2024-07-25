@@ -41,7 +41,7 @@ export const Button = ({
   children,
   disabled = false,
   variant = "primary",
-  classes,
+  className,
 }) => {
   const baseClasses =
     "rounded-md font-semibold transition duration-200 ease-in-out";
@@ -57,7 +57,7 @@ export const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]} ${classes} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${className} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {children}
     </button>
