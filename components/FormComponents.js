@@ -1,19 +1,20 @@
-export const TextInput = ({ value, onChange, placeholder }) => (
+export const TextInput = ({ value, onChange, placeholder, className }) => (
   <input
     type="text"
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className="flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
+    className={`flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
   />
 );
 
-export const Select = ({ value, onChange, options }) => (
+export const Select = ({ value, onChange, options, children }) => (
   <select
     value={value}
     onChange={onChange}
     className="form-select min-w-7 rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
   >
+    {children}
     {options.map((option) => (
       <option key={option.value} value={option.value}>
         {option.label}
@@ -22,10 +23,11 @@ export const Select = ({ value, onChange, options }) => (
   </select>
 );
 
-export const Checkbox = ({ label, checked, onChange }) => (
+export const Checkbox = ({ label, checked, onChange, disabled = false }) => (
   <label className="flex cursor-pointer items-center space-x-2">
     <input
       type="checkbox"
+      disabled={disabled}
       checked={checked}
       onChange={onChange}
       className="form-checkbox h-5 w-5 rounded border-zinc-300 bg-zinc-100 text-accent dark:border-zinc-600 dark:bg-zinc-800"
@@ -39,6 +41,7 @@ export const Button = ({
   children,
   disabled = false,
   variant = "primary",
+  classes,
 }) => {
   const baseClasses =
     "rounded-md font-semibold transition duration-200 ease-in-out";
@@ -54,7 +57,7 @@ export const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variantClasses[variant]} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${classes} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {children}
     </button>
