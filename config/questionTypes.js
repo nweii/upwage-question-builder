@@ -1,8 +1,8 @@
 import {
   generateYesNoOutput,
   generateNumberOutput,
-  generateMultipleChoiceSingleOutput,
-  generateMultipleChoiceMultiOutput,
+  generateSingleSelectOutput,
+  generateMultiSelectOutput,
 } from "../utils/outputGenerators";
 import { Checkbox } from "../components/FormComponents";
 
@@ -72,7 +72,7 @@ export const questionTypes = {
       ],
       answerOptions: [],
     },
-    generateOutput: generateMultipleChoiceSingleOutput,
+    generateOutput: generateSingleSelectOutput,
   },
   multi_select: {
     type: "multi_select",
@@ -83,11 +83,13 @@ export const questionTypes = {
       maxConditions: 3,
       maxChoices: 7,
       conditionOptions: [
+        { value: "is", label: "is" },
+        { value: "is not", label: "is not" },
         { value: "includes", label: "includes" },
         { value: "does not include", label: "does not include" },
       ],
       answerOptions: [],
     },
-    generateOutput: generateMultipleChoiceMultiOutput,
+    generateOutput: generateMultiSelectOutput,
   },
 };

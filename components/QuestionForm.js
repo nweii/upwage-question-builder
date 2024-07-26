@@ -50,7 +50,9 @@ export const QuestionForm = ({ type }) => {
   const [allowDecimals, setAllowDecimals] = useState(
     config.options.allowDecimals,
   );
-  const [choices, setChoices] = useState(config.options.answerOptions || []);
+  const [choices, setChoices] = useState(
+    config.options.answerOptions || [{ value: "", label: "" }],
+  );
 
   useEffect(() => {
     setOutput(
@@ -110,8 +112,7 @@ export const QuestionForm = ({ type }) => {
   const updateChoice = (index, field, value) => {
     const newChoices = [...choices];
     newChoices[index] = { ...newChoices[index], [field]: value };
-    // If updating the label, also update the value if it's empty
-    if (field === "label" && !newChoices[index].value) {
+    if (field === "label") {
       newChoices[index].value = value;
     }
     setChoices(newChoices);

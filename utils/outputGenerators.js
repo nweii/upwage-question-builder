@@ -46,44 +46,53 @@ export const generateNumberOutput = (
   return `qualifying,${keyQuestionValue},[${conditionString}]"${question}","${alias}",number`;
 };
 
-export const generateMultipleChoiceSingleOutput = (
+export const generateSingleSelectOutput = (
   question,
   alias,
   keyQuestionValue,
   conditions,
   choices,
 ) => {
-  if (!conditions || conditions.length === 0) {
-    return `qualifying,${keyQuestionValue},"${question}","${alias}",single_select,${choices.join("|")}`;
-  }
-  const conditionString = conditions
-    .map((c, index) => {
-      const condStr = `${c.condition === "is" ? "" : "!"}${c.answer}`;
-      return index === 0
-        ? condStr
-        : `${c.combinator === "or" ? "|" : "&"}${condStr}`;
-    })
-    .join("");
-  return `qualifying,${keyQuestionValue},["${conditionString}"]"${question}","${alias}",single_select,${choices.join("|")}`;
+  const choicesWithLogic = choices.map((choice) => {
+    const condition = conditions.find((c) => c.answer === choice.value);
+    let prefix = "";
+    if (condition) {
+      if (condition.condition === "is") {
+        prefix = "+";
+      } else if (condition.condition === "is not") {
+        prefix = "!";
+      }
+    }
+    return `"[${prefix}]${choice.value}"`;
+  });
+
+  return `qualifying,${keyQuestionValue},"${question}","${alias}",single_select,${choicesWithLogic.join(",")}`;
 };
 
-export const generateMultipleChoiceMultiOutput = (
+export const generateMultiSelectOutput = (
   question,
   alias,
   keyQuestionValue,
   conditions,
   choices,
 ) => {
-  if (!conditions || conditions.length === 0) {
-    return `qualifying,${keyQuestionValue},"${question}","${alias}",multi_select,${choices.join("|")}`;
-  }
-  const conditionString = conditions
-    .map((c, index) => {
-      const condStr = `${c.condition === "includes" ? "+" : "-"}${c.answer}`;
-      return index === 0
-        ? condStr
-        : `${c.combinator === "or" ? "|" : "&"}${condStr}`;
-    })
-    .join("");
-  return `qualifying,${keyQuestionValue},["${conditionString}"]"${question}","${alias}",multi_select,${choices.join("|")}`;
+  const choicesWithLogic = choices.map((choice) => {
+    const condition = conditions.find((c) => c.answer === choice.value);
+    let prefix = "";
+    if (condition) {
+      switch (condition.condition) {
+        case "is":
+        case "includes":
+          prefix = "+";
+          break;
+        case "is not":
+        case "does not include":
+          prefix = "!";
+          break;
+      }
+    }
+    return `"[${prefix}]${choice.value}"`;
+  });
+
+  return `qualifying,${keyQuestionValue},"${question}","${alias}",multi_select,${choicesWithLogic.join(",")}`;
 };
