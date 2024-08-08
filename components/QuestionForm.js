@@ -116,6 +116,15 @@ export const QuestionForm = ({ type }) => {
       newChoices[index].value = value;
     }
     setChoices(newChoices);
+
+    // Update conditions that use this choice
+    const newConditions = conditions.map((condition) => {
+      if (condition.answer === choices[index].value) {
+        return { ...condition, answer: value };
+      }
+      return condition;
+    });
+    setConditions(newConditions);
   };
 
   return (
