@@ -1,7 +1,14 @@
 import React from "react";
 import { Select, TextInput, Button } from "./FormComponents";
 
-const ConditionInput = ({ type, condition, options, onChange, onRemove }) => {
+const ConditionInput = ({
+  type,
+  condition,
+  options,
+  onChange,
+  onRemove,
+  index,
+}) => {
   const handleChange = (field, value) => {
     onChange({ ...condition, [field]: value });
   };
@@ -43,19 +50,41 @@ const ConditionInput = ({ type, condition, options, onChange, onRemove }) => {
     }
   };
 
+  const renderCombinator = () => {
+    if (index === 0) return null; // do not show combinator if there are no conditions yet
+    if (type === "multi_select") {
+      return <div className="my-2">and</div>;
+    }
+    return (
+      <div className="my-2">
+        <Select
+          value={condition.combinator}
+          onChange={(e) => handleChange("combinator", e.target.value)}
+          options={[
+            { value: "and", label: "and" },
+            { value: "or", label: "or" },
+          ]}
+        />
+      </div>
+    );
+  };
+
   return (
-    <div className="flex items-center space-x-2">
-      <span>Answer</span>
-      <Select
-        value={condition.condition}
-        onChange={(e) => handleChange("condition", e.target.value)}
-        options={options.conditionOptions}
-      />
-      {renderInput()}
-      <Button onClick={onRemove} variant="delete">
-        Remove
-      </Button>
-    </div>
+    <>
+      {renderCombinator()}
+      <div className="flex items-center space-x-2">
+        <span>Answer</span>
+        <Select
+          value={condition.condition}
+          onChange={(e) => handleChange("condition", e.target.value)}
+          options={options.conditionOptions}
+        />
+        {renderInput()}
+        <Button onClick={onRemove} variant="delete">
+          Remove
+        </Button>
+      </div>
+    </>
   );
 };
 

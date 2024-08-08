@@ -224,37 +224,17 @@ export const QuestionForm = ({ type }) => {
         {showDetails && (
           <div className="flex flex-col gap-2">
             {conditions.map((condition, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && (
-                  <div className="my-2">
-                    <Select
-                      value={condition.combinator}
-                      onChange={(e) =>
-                        handleConditionChange(index, {
-                          ...condition,
-                          combinator: e.target.value,
-                        })
-                      }
-                      options={[
-                        { value: "and", label: "and" },
-                        { value: "or", label: "or" },
-                      ]}
-                    />
-                  </div>
-                )}
-                <ConditionInput
-                  type={type}
-                  condition={condition}
-                  onChange={(newValue) =>
-                    handleConditionChange(index, newValue)
-                  }
-                  onRemove={() => removeCondition(index)}
-                  options={{
-                    ...config.options,
-                    answerOptions: choices,
-                  }}
-                />
-              </React.Fragment>
+              <ConditionInput
+                type={type}
+                condition={condition}
+                onChange={(newValue) => handleConditionChange(index, newValue)}
+                onRemove={() => removeCondition(index)}
+                options={{
+                  ...config.options,
+                  answerOptions: choices,
+                }}
+                index={index}
+              />
             ))}
             {conditions.length < config.options.maxConditions && (
               <Button onClick={addCondition} variant="secondary">
