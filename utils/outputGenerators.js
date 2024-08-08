@@ -58,15 +58,15 @@ export const generateSingleSelectOutput = (
     let prefix = "";
     if (condition) {
       if (condition.condition === "is") {
-        prefix = "+";
+        prefix = "[+]";
       } else if (condition.condition === "is not") {
-        prefix = "!";
+        prefix = "[!]";
       }
     }
-    return `"[${prefix}]${choice.value}"`;
+    return `"${prefix}${choice.value}"`;
   });
 
-  return `qualifying,${keyQuestionValue},"${question}","${alias}",single_select,${choicesWithLogic.join(",")}`;
+  return `qualifying,${keyQuestionValue},"${question}","${alias}",single_select${choicesWithLogic.length ? "," + choicesWithLogic : ""}`;
 };
 
 export const generateMultiSelectOutput = (
@@ -83,16 +83,16 @@ export const generateMultiSelectOutput = (
       switch (condition.condition) {
         case "is":
         case "includes":
-          prefix = "+";
+          prefix = "[+]";
           break;
         case "is not":
         case "does not include":
-          prefix = "!";
+          prefix = "[!]";
           break;
       }
     }
-    return `"[${prefix}]${choice.value}"`;
+    return `"${prefix}${choice.value}"`;
   });
 
-  return `qualifying,${keyQuestionValue},"${question}","${alias}",multi_select,${choicesWithLogic.join(",")}`;
+  return `qualifying,${keyQuestionValue},"${question}","${alias}",multi_select${choicesWithLogic.length ? "," + choicesWithLogic : ""}`;
 };
