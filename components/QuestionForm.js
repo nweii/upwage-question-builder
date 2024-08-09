@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { TextInput, Select, Button, Checkbox } from "./FormComponents";
+import React, { useState, useEffect, useRef } from "react";
+import { TextInput, CustomSelect, Button, Checkbox } from "./FormComponents";
 import ConditionInput from "./ConditionInput";
 import { questionTypes } from "../config/questionTypes";
 
@@ -99,6 +99,20 @@ export const QuestionForm = ({ type }) => {
   };
 
   // Choices are for multiple choice question types only
+  const newChoiceInputRef = useRef(null);
+  const prevChoicesLengthRef = useRef(choices.length);
+  // focus the new input field when a choice is added
+  useEffect(() => {
+    if (
+      choices.length > prevChoicesLengthRef.current &&
+      newChoiceInputRef.current
+    ) {
+      newChoiceInputRef.current.focus();
+    }
+    // Update the ref with the current length for the next render
+    prevChoicesLengthRef.current = choices.length;
+  }, [choices.length]);
+
   const addChoice = () => {
     if (choices.length < config.options.maxChoices) {
       setChoices([...choices, { value: "", label: "" }]);
@@ -175,6 +189,9 @@ export const QuestionForm = ({ type }) => {
                     }
                     placeholder={`Choice ${index + 1}`}
                     className="grow"
+                    ref={
+                      index === choices.length - 1 ? newChoiceInputRef : null
+                    }
                   />
                 </div>
                 <Button onClick={() => removeChoice(index)} variant="delete">

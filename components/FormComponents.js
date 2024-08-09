@@ -1,13 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, forwardRef } from "react";
 
-export const TextInput = ({ value, onChange, placeholder, className }) => (
-  <input
-    type="text"
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-    className={`flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
-  />
+export const TextInput = forwardRef(
+  ({ value, onChange, placeholder, className }, ref) => (
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
+      ref={ref}
+    />
+  ),
 );
 
 export const CustomSelect = ({
@@ -20,8 +23,10 @@ export const CustomSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
+  const isDisabled = options.every((option) => !option.value);
 
   const handleOptionClick = (optionValue) => {
+    if (isDisabled) return;
     if (multiple) {
       // for multiple selection, toggle the option's selected state.
       const newValue = Array.isArray(value) ? value : [];
@@ -89,17 +94,18 @@ export const CustomSelect = ({
   }, []);
 
   const getDisplayValue = () => {
+    if (isDisabled) return "Choice";
     if (multiple) {
       // show comma-separated list of options if multi-select
       return Array.isArray(value) && value.length > 0
         ? value.map((v) => options.find((o) => o.value === v)?.label).join(", ")
-        : placeholder || "Select options";
+        : placeholder || "Select choices";
     } else {
       return (
         // show the selected option if single-select
         options.find((o) => o.value === value)?.label ||
         placeholder ||
-        "Select an option"
+        "Select a choice"
       );
     }
   };
@@ -110,8 +116,11 @@ export const CustomSelect = ({
         ref={buttonRef}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className="form-select w-auto min-w-[100px] cursor-pointer rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 text-left focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
-        onClick={() => setIsOpen(!isOpen)}
+        disabled={isDisabled}
+        className={`form-select w-auto min-w-[100px] cursor-pointer rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 text-left focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${
+          isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        }`}
+        onClick={() => !isDisabled && setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
       >
         {getDisplayValue()}
