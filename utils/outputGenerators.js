@@ -77,7 +77,11 @@ export const generateMultiSelectOutput = (
   choices,
 ) => {
   const choicesWithLogic = choices.map((choice) => {
-    const condition = conditions.find((c) => c.answer === choice.value);
+    const condition = conditions.find((c) =>
+      c.condition === "includes any of"
+        ? c.answer.includes(choice.value)
+        : c.answer === choice.value,
+    );
     let prefix = "";
     if (condition) {
       switch (condition.condition) {
