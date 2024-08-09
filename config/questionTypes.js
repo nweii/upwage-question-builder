@@ -83,9 +83,11 @@ export const questionTypes = {
       maxConditions: 3,
       maxChoices: 7,
       conditionOptions: [
-        { value: "is", label: "is" },
-        { value: "is not", label: "is not" },
         { value: "includes", label: "includes" },
+        {
+          value: "includes any of",
+          label: "includes any of",
+        },
         { value: "does not include", label: "does not include" },
       ],
       answerOptions: [],

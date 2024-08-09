@@ -1,3 +1,5 @@
+import React, { useState, useRef, useEffect } from "react";
+
 export const TextInput = ({ value, onChange, placeholder, className }) => (
   <input
     type="text"
@@ -22,6 +24,63 @@ export const Select = ({ value, onChange, options, children }) => (
     ))}
   </select>
 );
+
+export const MultiSelect = ({ value, onChange, options, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleOption = (optionValue) => {
+    const newValue = value.includes(optionValue)
+      ? value.filter((v) => v !== optionValue)
+      : [...value, optionValue];
+    onChange(newValue);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <div
+        className="form-select min-w-48 cursor-pointer rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {value.length > 0
+          ? value
+              .map((v) => options.find((o) => o.value === v)?.label)
+              .join(", ")
+          : placeholder || "Select options"}
+      </div>
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-zinc-50 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className={`cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 ${
+                value.includes(option.value)
+                  ? "bg-gray-200 dark:bg-zinc-600"
+                  : ""
+              }`}
+              onClick={() => toggleOption(option.value)}
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const Checkbox = ({ label, checked, onChange, disabled = false }) => (
   <label className="flex cursor-pointer items-center space-x-2">

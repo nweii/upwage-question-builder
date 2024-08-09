@@ -81,13 +81,14 @@ export const generateMultiSelectOutput = (
     let prefix = "";
     if (condition) {
       switch (condition.condition) {
-        case "is":
         case "includes":
-          prefix = "[+]";
+          prefix = "[*]";
           break;
-        case "is not":
         case "does not include":
           prefix = "[!]";
+          break;
+        case "includes any of":
+          prefix = "[+]";
           break;
       }
     }

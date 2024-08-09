@@ -1,5 +1,11 @@
 import React from "react";
-import { Select, TextInput, Button } from "./FormComponents";
+import {
+  Select,
+  TextInput,
+  Button,
+  Checkbox,
+  MultiSelect,
+} from "./FormComponents";
 
 const ConditionInput = ({
   type,
@@ -33,7 +39,6 @@ const ConditionInput = ({
           />
         );
       case "single_select":
-      case "multi_select":
         return (
           <Select
             value={condition.answer}
@@ -45,6 +50,31 @@ const ConditionInput = ({
             </option>
           </Select>
         );
+      case "multi_select":
+        if (condition.condition === "includes any of") {
+          return (
+            <MultiSelect
+              value={condition.answer || []}
+              onChange={(selectedOptions) =>
+                handleChange("answer", selectedOptions)
+              }
+              options={options.answerOptions}
+              placeholder="Select choices"
+            />
+          );
+        } else {
+          return (
+            <Select
+              value={condition.answer}
+              onChange={(e) => handleChange("answer", e.target.value)}
+              options={options.answerOptions}
+            >
+              <option value="" disabled>
+                Select choice
+              </option>
+            </Select>
+          );
+        }
       default:
         return null;
     }
@@ -52,8 +82,8 @@ const ConditionInput = ({
 
   const renderCombinator = () => {
     if (index === 0) return null; // do not show combinator if there are no conditions yet
-    if (type === "multi_select") {
-      return <div className="my-2">and</div>;
+    if (type === "multi_select" || type === "single_select") {
+      return null;
     }
     return (
       <div className="my-2">
