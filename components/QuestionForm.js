@@ -141,6 +141,15 @@ export const QuestionForm = ({ type }) => {
     setConditions(newConditions);
   };
 
+  const handleChoiceKeyDown = (event, index) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (index === choices.length - 1 && choices[index].label.trim() !== "") {
+        addChoice();
+      }
+    }
+  };
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
       <div className="flex flex-col gap-4">
@@ -187,6 +196,7 @@ export const QuestionForm = ({ type }) => {
                     onChange={(e) =>
                       updateChoice(index, "label", e.target.value)
                     }
+                    onKeyDown={(e) => handleChoiceKeyDown(e, index)}
                     placeholder={`Choice ${index + 1}`}
                     className="grow"
                     ref={

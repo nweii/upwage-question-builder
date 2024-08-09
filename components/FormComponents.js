@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, forwardRef } from "react";
 
 export const TextInput = forwardRef(
-  ({ value, onChange, placeholder, className }, ref) => (
+  ({ value, onChange, onKeyDown, placeholder, className }, ref) => (
     <input
       type="text"
       value={value}
       onChange={onChange}
+      onKeyDown={onKeyDown}
       placeholder={placeholder}
       className={`flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
       ref={ref}
