@@ -71,7 +71,7 @@ const ConditionInput = ({
   const renderCombinator = () => {
     if (index === 0) return null; // do not show combinator if there are no conditions yet
     if (type === "multi_select" || type === "single_select") {
-      return <div className="my-2">and</div>;
+      return null;
     }
     return (
       <div className="my-2">
