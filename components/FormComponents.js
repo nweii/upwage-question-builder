@@ -10,30 +10,27 @@ export const TextInput = ({ value, onChange, placeholder, className }) => (
   />
 );
 
-export const Select = ({ value, onChange, options, children }) => (
-  <select
-    value={value}
-    onChange={onChange}
-    className="form-select min-w-7 rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
-  >
-    {children}
-    {options.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </select>
-);
-
-export const MultiSelect = ({ value, onChange, options, placeholder }) => {
+export const CustomSelect = ({
+  value,
+  onChange,
+  options,
+  placeholder,
+  multiple = false,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const toggleOption = (optionValue) => {
-    const newValue = value.includes(optionValue)
-      ? value.filter((v) => v !== optionValue)
-      : [...value, optionValue];
-    onChange(newValue);
+  const handleOptionClick = (optionValue) => {
+    if (multiple) {
+      const newValue = Array.isArray(value) ? value : [];
+      const updatedValue = newValue.includes(optionValue)
+        ? newValue.filter((v) => v !== optionValue)
+        : [...newValue, optionValue];
+      onChange(updatedValue);
+    } else {
+      onChange(optionValue);
+      setIsOpen(false);
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -49,17 +46,27 @@ export const MultiSelect = ({ value, onChange, options, placeholder }) => {
     };
   }, []);
 
+  const getDisplayValue = () => {
+    if (multiple) {
+      return Array.isArray(value) && value.length > 0
+        ? value.map((v) => options.find((o) => o.value === v)?.label).join(", ")
+        : placeholder || "Select options";
+    } else {
+      return (
+        options.find((o) => o.value === value)?.label ||
+        placeholder ||
+        "Select an option"
+      );
+    }
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <div
         className="form-select min-w-48 cursor-pointer rounded-md border border-gray-300 bg-zinc-50 py-2 pl-4 pr-8 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {value.length > 0
-          ? value
-              .map((v) => options.find((o) => o.value === v)?.label)
-              .join(", ")
-          : placeholder || "Select options"}
+        {getDisplayValue()}
       </div>
       {isOpen && (
         <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-zinc-50 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
@@ -67,11 +74,15 @@ export const MultiSelect = ({ value, onChange, options, placeholder }) => {
             <div
               key={option.value}
               className={`cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 ${
-                value.includes(option.value)
+                (
+                  multiple
+                    ? value.includes(option.value)
+                    : value === option.value
+                )
                   ? "bg-gray-200 dark:bg-zinc-600"
                   : ""
               }`}
-              onClick={() => toggleOption(option.value)}
+              onClick={() => handleOptionClick(option.value)}
             >
               {option.label}
             </div>

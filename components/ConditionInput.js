@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Select,
-  TextInput,
-  Button,
-  Checkbox,
-  MultiSelect,
-} from "./FormComponents";
+import { CustomSelect, TextInput, Button, Checkbox } from "./FormComponents";
 
 const ConditionInput = ({
   type,
@@ -23,10 +17,11 @@ const ConditionInput = ({
     switch (type) {
       case "yes_no":
         return (
-          <Select
+          <CustomSelect
             value={condition.answer}
-            onChange={(e) => handleChange("answer", e.target.value)}
+            onChange={(value) => handleChange("answer", value)}
             options={options.answerOptions}
+            placeholder="Select an option"
           />
         );
       case "number":
@@ -40,39 +35,32 @@ const ConditionInput = ({
         );
       case "single_select":
         return (
-          <Select
+          <CustomSelect
             value={condition.answer}
-            onChange={(e) => handleChange("answer", e.target.value)}
+            onChange={(value) => handleChange("answer", value)}
             options={options.answerOptions}
-          >
-            <option value="" disabled>
-              Select choice
-            </option>
-          </Select>
+            placeholder="Select an option"
+          />
         );
       case "multi_select":
         if (condition.condition === "includes any of") {
           return (
-            <MultiSelect
+            <CustomSelect
               value={condition.answer || []}
-              onChange={(selectedOptions) =>
-                handleChange("answer", selectedOptions)
-              }
+              onChange={(value) => handleChange("answer", value)}
               options={options.answerOptions}
-              placeholder="Select choices"
+              placeholder="Select options"
+              multiple={true}
             />
           );
         } else {
           return (
-            <Select
+            <CustomSelect
               value={condition.answer}
-              onChange={(e) => handleChange("answer", e.target.value)}
+              onChange={(value) => handleChange("answer", value)}
               options={options.answerOptions}
-            >
-              <option value="" disabled>
-                Select choice
-              </option>
-            </Select>
+              placeholder="Select an option"
+            />
           );
         }
       default:
@@ -83,17 +71,18 @@ const ConditionInput = ({
   const renderCombinator = () => {
     if (index === 0) return null; // do not show combinator if there are no conditions yet
     if (type === "multi_select" || type === "single_select") {
-      return null;
+      return <div className="my-2">and</div>;
     }
     return (
       <div className="my-2">
-        <Select
+        <CustomSelect
           value={condition.combinator}
-          onChange={(e) => handleChange("combinator", e.target.value)}
+          onChange={(value) => handleChange("combinator", value)}
           options={[
             { value: "and", label: "and" },
             { value: "or", label: "or" },
           ]}
+          placeholder="Select combinator"
         />
       </div>
     );
@@ -104,10 +93,11 @@ const ConditionInput = ({
       {renderCombinator()}
       <div className="flex items-center space-x-2">
         <span>Answer</span>
-        <Select
+        <CustomSelect
           value={condition.condition}
-          onChange={(e) => handleChange("condition", e.target.value)}
+          onChange={(value) => handleChange("condition", value)}
           options={options.conditionOptions}
+          placeholder="Select condition"
         />
         {renderInput()}
         <Button onClick={onRemove} variant="delete">
