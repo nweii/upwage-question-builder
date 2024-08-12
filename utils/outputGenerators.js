@@ -57,10 +57,15 @@ export const generateSingleSelectOutput = (
     const condition = conditions.find((c) => c.answer === choice.value);
     let prefix = "";
     if (condition) {
-      if (condition.condition === "is") {
-        prefix = "[+]";
-      } else if (condition.condition === "is not") {
-        prefix = "[!]";
+      switch (condition.condition) {
+        case "is":
+          prefix = "[+]";
+          break;
+        case "is not":
+          prefix = "[!]";
+          break;
+        default:
+          prefix = "";
       }
     }
     return `"${prefix}${choice.value}"`;
