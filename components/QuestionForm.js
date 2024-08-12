@@ -166,7 +166,7 @@ export const QuestionForm = ({ type }) => {
               variant="secondary"
               className={choices.length && "ml-9"}
             >
-              + Add choice
+              + Add answer choice
             </Button>
           )}
         </div>
