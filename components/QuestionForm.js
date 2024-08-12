@@ -101,6 +101,46 @@ export const QuestionForm = ({ type }) => {
   // Choices are for multiple choice question types only
   const newChoiceInputRef = useRef(null);
   const prevChoicesLengthRef = useRef(choices.length);
+
+  const choiceHandlers = {
+    addChoice: () => {
+      if (choices.length < config.options.maxChoices) {
+        setChoices([...choices, { value: "", label: "" }]);
+      }
+    },
+    removeChoice: (index) => {
+      setChoices(choices.filter((_, i) => i !== index));
+    },
+    updateChoice: (index, field, value) => {
+      const newChoices = [...choices];
+      newChoices[index] = { ...newChoices[index], [field]: value };
+      if (field === "label") {
+        newChoices[index].value = value;
+      }
+      setChoices(newChoices);
+
+      // Update conditions that use this choice
+      const newConditions = conditions.map((condition) => {
+        if (condition.answer === choices[index].value) {
+          return { ...condition, answer: value };
+        }
+        return condition;
+      });
+      setConditions(newConditions);
+    },
+    handleChoiceKeyDown: (event, index) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (
+          index === choices.length - 1 &&
+          choices[index].label.trim() !== ""
+        ) {
+          choiceHandlers.addChoice();
+        }
+      }
+    },
+  };
+
   // focus the new input field when a choice is added
   useEffect(() => {
     if (
@@ -112,43 +152,6 @@ export const QuestionForm = ({ type }) => {
     // Update the ref with the current length for the next render
     prevChoicesLengthRef.current = choices.length;
   }, [choices.length]);
-
-  const addChoice = () => {
-    if (choices.length < config.options.maxChoices) {
-      setChoices([...choices, { value: "", label: "" }]);
-    }
-  };
-
-  const removeChoice = (index) => {
-    setChoices(choices.filter((_, i) => i !== index));
-  };
-
-  const updateChoice = (index, field, value) => {
-    const newChoices = [...choices];
-    newChoices[index] = { ...newChoices[index], [field]: value };
-    if (field === "label") {
-      newChoices[index].value = value;
-    }
-    setChoices(newChoices);
-
-    // Update conditions that use this choice
-    const newConditions = conditions.map((condition) => {
-      if (condition.answer === choices[index].value) {
-        return { ...condition, answer: value };
-      }
-      return condition;
-    });
-    setConditions(newConditions);
-  };
-
-  const handleChoiceKeyDown = (event, index) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (index === choices.length - 1 && choices[index].label.trim() !== "") {
-        addChoice();
-      }
-    }
-  };
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
@@ -194,9 +197,15 @@ export const QuestionForm = ({ type }) => {
                   <TextInput
                     value={choice.label}
                     onChange={(e) =>
-                      updateChoice(index, "label", e.target.value)
+                      choiceHandlers.updateChoice(
+                        index,
+                        "label",
+                        e.target.value,
+                      )
                     }
-                    onKeyDown={(e) => handleChoiceKeyDown(e, index)}
+                    onKeyDown={(e) =>
+                      choiceHandlers.handleChoiceKeyDown(e, index)
+                    }
                     placeholder={`Choice ${index + 1}`}
                     className="grow"
                     ref={
@@ -204,14 +213,17 @@ export const QuestionForm = ({ type }) => {
                     }
                   />
                 </div>
-                <Button onClick={() => removeChoice(index)} variant="delete">
+                <Button
+                  onClick={() => choiceHandlers.removeChoice(index)}
+                  variant="delete"
+                >
                   Remove
                 </Button>
               </div>
             ))}
             {choices.length < config.options.maxChoices && (
               <Button
-                onClick={addChoice}
+                onClick={choiceHandlers.addChoice}
                 variant="secondary"
                 className={choices.length && "ml-9"}
               >
