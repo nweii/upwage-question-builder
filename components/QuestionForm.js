@@ -4,42 +4,10 @@ import { TextInput, CustomSelect, Button, Checkbox } from "./FormComponents";
 import ConditionInput from "./ConditionInput";
 import { questionTypes } from "../config/questionTypes";
 
-const LittleCircle = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
-  >
-    <circle cx="6" cy="6" r="5" strokeOpacity="1" strokeWidth="2" />
-  </svg>
-);
-
-const LittleRect = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
-  >
-    <rect
-      x={1}
-      y={1}
-      width={10}
-      height={10}
-      rx={2}
-      style={{ strokeOpacity: 1 }}
-      strokeWidth={2}
-    />
-  </svg>
-);
-
 export const QuestionForm = ({ type }) => {
   const config = questionTypes[type];
+
+  // State declarations
   const [question, setQuestion] = useState(config.initialQuestion);
   const [alias, setAlias] = useState(config.initialAlias);
   const [isKeyQuestion, setIsKeyQuestion] = useState(false);
@@ -54,54 +22,11 @@ export const QuestionForm = ({ type }) => {
     config.options.answerOptions || [{ value: "", label: "" }],
   );
 
-  useEffect(() => {
-    setOutput(
-      config.generateOutput(
-        question,
-        alias,
-        isKeyQuestion,
-        conditions,
-        choices,
-      ),
-    );
-  }, [question, alias, isKeyQuestion, conditions, config, choices]);
-
-  useEffect(() => {
-    setCopyStatus("Copy");
-  }, [output]);
-
-  const addCondition = () => {
-    if (conditions.length < config.options.maxConditions) {
-      setConditions([
-        ...conditions,
-        { ...config.initialConditions[0], combinator: "and" },
-      ]);
-    }
-  };
-
-  const removeCondition = (index) => {
-    setConditions(conditions.filter((_, i) => i !== index));
-  };
-
-  const handleConditionChange = (index, newCondition) => {
-    const newConditions = [...conditions];
-    newConditions[index] = newCondition;
-    setConditions(newConditions);
-  };
-
-  const handleCopying = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-      setCopyStatus("Copied ✔︎");
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  };
-
-  // Choices are for multiple choice question types only
+  // Ref declarations for choice selection dropdown
   const newChoiceInputRef = useRef(null);
   const prevChoicesLengthRef = useRef(choices.length);
 
+  // Event handlers and utility functions
   const choiceHandlers = {
     addChoice: () => {
       if (choices.length < config.options.maxChoices) {
@@ -137,11 +62,135 @@ export const QuestionForm = ({ type }) => {
         ) {
           choiceHandlers.addChoice();
         }
+        // we include the `!==""` because we only want this behavior after the user has typed something
       }
     },
   };
 
-  // focus the new input field when a choice is added
+  const addCondition = () => {
+    if (conditions.length < config.options.maxConditions) {
+      setConditions([
+        ...conditions,
+        { ...config.initialConditions[0], combinator: "and" },
+      ]);
+    }
+  };
+
+  const removeCondition = (index) => {
+    setConditions(conditions.filter((_, i) => i !== index));
+  };
+
+  const handleConditionChange = (index, newCondition) => {
+    const newConditions = [...conditions];
+    newConditions[index] = newCondition;
+    setConditions(newConditions);
+  };
+
+  const handleCopying = async () => {
+    try {
+      await navigator.clipboard.writeText(output);
+      setCopyStatus("Copied ✔︎");
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const renderChoices = () => {
+    if (type !== "multi_select" && type !== "single_select") return null;
+
+    const LittleCircle = () => (
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
+      >
+        <circle cx="6" cy="6" r="5" strokeOpacity="1" strokeWidth="2" />
+      </svg>
+    );
+
+    const LittleRect = () => (
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="stroke-black opacity-30 dark:stroke-white dark:opacity-40"
+      >
+        <rect
+          x={1}
+          y={1}
+          width={10}
+          height={10}
+          rx={2}
+          style={{ strokeOpacity: 1 }}
+          strokeWidth={2}
+        />
+      </svg>
+    );
+
+    return (
+      <div className="mt-4">
+        <div className="flex flex-col gap-2">
+          {choices.map((choice, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="flex grow flex-row items-center gap-6">
+                {type === "multi_select" ? <LittleRect /> : <LittleCircle />}
+                <TextInput
+                  value={choice.label}
+                  onChange={(e) =>
+                    choiceHandlers.updateChoice(index, "label", e.target.value)
+                  }
+                  onKeyDown={(e) =>
+                    choiceHandlers.handleChoiceKeyDown(e, index)
+                  }
+                  placeholder={`Choice ${index + 1}`}
+                  className="grow"
+                  ref={index === choices.length - 1 ? newChoiceInputRef : null}
+                />
+              </div>
+              <Button
+                onClick={() => choiceHandlers.removeChoice(index)}
+                variant="delete"
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+          {choices.length < config.options.maxChoices && (
+            <Button
+              onClick={choiceHandlers.addChoice}
+              variant="secondary"
+              className={choices.length && "ml-9"}
+            >
+              + Add choice
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // useEffect hooks
+  useEffect(() => {
+    setOutput(
+      config.generateOutput(
+        question,
+        alias,
+        isKeyQuestion,
+        conditions,
+        choices,
+      ),
+    );
+  }, [question, alias, isKeyQuestion, conditions, config, choices]);
+
+  useEffect(() => {
+    setCopyStatus("Copy");
+  }, [output]);
+
   useEffect(() => {
     if (
       choices.length > prevChoicesLengthRef.current &&
@@ -149,10 +198,10 @@ export const QuestionForm = ({ type }) => {
     ) {
       newChoiceInputRef.current.focus();
     }
-    // Update the ref with the current length for the next render
     prevChoicesLengthRef.current = choices.length;
   }, [choices.length]);
 
+  // Render function
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
       <div className="flex flex-col gap-4">
@@ -187,52 +236,7 @@ export const QuestionForm = ({ type }) => {
             )}
         </div>
       </div>
-      {(type === "multi_select" || type === "single_select") && (
-        <div className="mt-4">
-          <div className="flex flex-col gap-2">
-            {choices.map((choice, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="flex grow flex-row items-center gap-6">
-                  {type === "multi_select" ? <LittleRect /> : <LittleCircle />}
-                  <TextInput
-                    value={choice.label}
-                    onChange={(e) =>
-                      choiceHandlers.updateChoice(
-                        index,
-                        "label",
-                        e.target.value,
-                      )
-                    }
-                    onKeyDown={(e) =>
-                      choiceHandlers.handleChoiceKeyDown(e, index)
-                    }
-                    placeholder={`Choice ${index + 1}`}
-                    className="grow"
-                    ref={
-                      index === choices.length - 1 ? newChoiceInputRef : null
-                    }
-                  />
-                </div>
-                <Button
-                  onClick={() => choiceHandlers.removeChoice(index)}
-                  variant="delete"
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-            {choices.length < config.options.maxChoices && (
-              <Button
-                onClick={choiceHandlers.addChoice}
-                variant="secondary"
-                className={choices.length && "ml-9"}
-              >
-                + Add choice
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
+      {renderChoices()}
       <hr className="my-4" />
       <div className="my-4">
         <div className="mb-2 flex items-center justify-between">
@@ -264,6 +268,7 @@ export const QuestionForm = ({ type }) => {
           <div className="flex flex-col gap-2">
             {conditions.map((condition, index) => (
               <ConditionInput
+                key={index}
                 type={type}
                 condition={condition}
                 onChange={(newValue) => handleConditionChange(index, newValue)}
