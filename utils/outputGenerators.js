@@ -18,6 +18,15 @@ export const generateYesNoOutput = (
   return `qualifying,${keyQuestionValue},["${conditionString}"]"${question}","${alias}",yes_no`;
 };
 
+const operatorMap = {
+  equals: "=",
+  "does not equal": "!=",
+  "is greater than": ">",
+  "is less than": "<",
+  "is greater than or equal to": ">=",
+  "is less than or equal to": "<=",
+};
+
 export const generateNumberOutput = (
   question,
   alias,
@@ -29,14 +38,6 @@ export const generateNumberOutput = (
   }
   const conditionString = conditions
     .map((c, index) => {
-      const operatorMap = {
-        equals: "=",
-        "does not equal": "!=",
-        "is greater than": ">",
-        "is less than": "<",
-        "is greater than or equal to": ">=",
-        "is less than or equal to": "<=",
-      };
       const condStr = `${operatorMap[c.condition] || "="}${c.value}`;
       return index === 0
         ? condStr
