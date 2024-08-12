@@ -188,7 +188,7 @@ export const Button = ({
     secondary:
       "py-2 text-zinc-500 hover:text-accent flex items-center inline-flex gap-x-1",
     delete:
-      "px-3 py-2 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-600/10 dark:hover:bg-red-400/10",
+      "px-3 text-zinc-500 py-2 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-600/10 dark:hover:bg-red-400/10",
   };
   const extraClasses = className;
 

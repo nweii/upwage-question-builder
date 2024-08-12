@@ -207,7 +207,7 @@ export const QuestionForm = ({ type }) => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="flex grow flex-col">
-            <label className="mb-2 block font-semibold">Question</label>
+            <label className="mb-2 block font-bold">Question</label>
             <TextInput
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
@@ -215,11 +215,12 @@ export const QuestionForm = ({ type }) => {
             />
           </div>
           <div className="flex flex-col">
-            <label className="mb-2 block font-semibold">Alias</label>
+            <label className="mb-2 block w-full font-bold">Alias</label>
             <TextInput
               value={alias}
               onChange={(e) => setAlias(e.target.value)}
               placeholder="Enter alias"
+              className="w-full"
             />
           </div>
         </div>
@@ -237,13 +238,14 @@ export const QuestionForm = ({ type }) => {
         </div>
       </div>
       {renderChoices()}
-      <hr className="my-4" />
+      <hr />
       <div className="my-4">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="font-semibold">Qualifying Conditions</h3>
+          <h3 className="font-bold">Qualifying Conditions</h3>
           <Button
             onClick={() => setShowDetails(!showDetails)}
             variant="secondary"
+            className={"text-right"}
           >
             {showDetails ? "Hide details" : "Show details"}
             <svg
@@ -290,7 +292,7 @@ export const QuestionForm = ({ type }) => {
       </div>
       <hr />
       <div className="mt-4">
-        <h3 className="mb-2 font-semibold">Output</h3>
+        <h3 className="mb-2 font-bold">Output</h3>
         <textarea
           value={output}
           readOnly
