@@ -98,8 +98,6 @@ export const QuestionForm = ({ type }) => {
   };
 
   const renderBasicTypeInputs = () => {
-    if (type !== "basic") return null;
-
     return (
       <div className="mt-4 flex items-center gap-4">
         <div className="flex flex-col">
@@ -125,8 +123,6 @@ export const QuestionForm = ({ type }) => {
   };
 
   const renderChoices = () => {
-    if (type !== "multi_select" && type !== "single_select") return null;
-
     const LittleCircle = () => (
       <svg
         width="12"
@@ -285,13 +281,11 @@ export const QuestionForm = ({ type }) => {
             config.options.renderAdditionalOptions(
               allowDecimals,
               setAllowDecimals,
-              conditions,
-              setConditions,
             )}
         </div>
       </div>
-      {renderBasicTypeInputs()}
-      {renderChoices()}
+      {type === "basic" && renderBasicTypeInputs()}
+      {(type === "single_select" || type === "multi_select") && renderChoices()}
       {/* Show the qualifying conditions section for all types except Basic */}
       {type !== "basic" && (
         <>
