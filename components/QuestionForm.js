@@ -21,6 +21,8 @@ export const QuestionForm = ({ type }) => {
   const [choices, setChoices] = useState(
     config.options.answerOptions || [{ value: "", label: "" }],
   );
+  const [basicQuestionType, setBasicQuestionType] = useState("identifying");
+  const [basicIdentifyingType, setBasicIdentifyingType] = useState("name");
 
   // Ref declarations for choice selection dropdown
   const newChoiceInputRef = useRef(null);
@@ -93,6 +95,33 @@ export const QuestionForm = ({ type }) => {
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
+  };
+
+  const renderBasicTypeInputs = () => {
+    if (type !== "basic") return null;
+
+    return (
+      <div className="mt-4 flex items-center gap-4">
+        <div className="flex flex-col">
+          <label className="mb-2 block font-bold">Type</label>
+          <CustomSelect
+            value={basicQuestionType}
+            onChange={setBasicQuestionType}
+            options={config.options.questionTypes}
+          />
+        </div>
+        {basicQuestionType === "identifying" && (
+          <div className="flex flex-col">
+            <label className="mb-2 block font-bold">Identifying Type</label>
+            <CustomSelect
+              value={basicIdentifyingType}
+              onChange={setBasicIdentifyingType}
+              options={config.options.identifyingTypes}
+            />
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderChoices = () => {
@@ -176,16 +205,38 @@ export const QuestionForm = ({ type }) => {
 
   // useEffect hooks
   useEffect(() => {
-    setOutput(
-      config.generateOutput(
-        question,
-        alias,
-        isKeyQuestion,
-        conditions,
-        choices,
-      ),
-    );
-  }, [question, alias, isKeyQuestion, conditions, config, choices]);
+    if (type === "basic") {
+      setOutput(
+        config.generateOutput(
+          question,
+          alias,
+          isKeyQuestion,
+          basicQuestionType,
+          basicIdentifyingType,
+        ),
+      );
+    } else {
+      setOutput(
+        config.generateOutput(
+          question,
+          alias,
+          isKeyQuestion,
+          conditions,
+          choices,
+        ),
+      );
+    }
+  }, [
+    question,
+    alias,
+    isKeyQuestion,
+    conditions,
+    choices,
+    config,
+    type,
+    basicQuestionType,
+    basicIdentifyingType,
+  ]);
 
   useEffect(() => {
     setCopyStatus("Copy");
@@ -237,60 +288,70 @@ export const QuestionForm = ({ type }) => {
             )}
         </div>
       </div>
+      {renderBasicTypeInputs()}
       {renderChoices()}
-      <hr />
-      <div className="my-4">
-        <div className="mb-2 flex items-center justify-between">
-          <h3 className="font-bold">Qualifying Conditions</h3>
-          <Button
-            onClick={() => setShowDetails(!showDetails)}
-            variant="secondary"
-            className={"text-right"}
-          >
-            {showDetails ? "Hide details" : "Show details"}
-            <svg
-              className={`ml-1 h-4 w-4 transform transition-transform ${
-                showDetails ? "rotate-180" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </Button>
-        </div>
-        {showDetails && (
-          <div className="flex flex-col gap-2">
-            {conditions.map((condition, index) => (
-              <ConditionInput
-                key={index}
-                type={type}
-                condition={condition}
-                onChange={(newValue) => handleConditionChange(index, newValue)}
-                onRemove={() => removeCondition(index)}
-                options={{
-                  ...config.options,
-                  answerOptions: choices,
-                }}
-                index={index}
-              />
-            ))}
-            {conditions.length < config.options.maxConditions && (
-              <Button onClick={addCondition} variant="secondary">
-                + Add condition
+      {/* Show the qualifying conditions section for all types except Basic */}
+      {type !== "basic" && (
+        <>
+          <hr />
+          <div className="my-4">
+            {/* Qualifying Conditions section */}
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-bold">Qualifying Conditions</h3>
+              <Button
+                onClick={() => setShowDetails(!showDetails)}
+                variant="secondary"
+                className={"text-right"}
+              >
+                {showDetails ? "Hide details" : "Show details"}
+                <svg
+                  className={`ml-1 h-4 w-4 transform transition-transform ${
+                    showDetails ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </Button>
+            </div>
+            {showDetails && (
+              <div className="flex flex-col gap-2">
+                {conditions.map((condition, index) => (
+                  <ConditionInput
+                    key={index}
+                    type={type}
+                    condition={condition}
+                    onChange={(newValue) =>
+                      handleConditionChange(index, newValue)
+                    }
+                    onRemove={() => removeCondition(index)}
+                    options={{
+                      ...config.options,
+                      answerOptions: choices,
+                    }}
+                    index={index}
+                  />
+                ))}
+                {conditions.length < config.options.maxConditions && (
+                  <Button onClick={addCondition} variant="secondary">
+                    + Add condition
+                  </Button>
+                )}
+              </div>
             )}
           </div>
-        )}
-      </div>
+        </>
+      )}
       <hr />
+      {/* Output snippet section */}
       <div className="mt-4">
         <h3 className="mb-2 font-bold">Output</h3>
         <textarea

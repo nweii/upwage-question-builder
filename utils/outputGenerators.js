@@ -1,3 +1,20 @@
+export const generateBasicOutput = (
+  question,
+  alias,
+  isKeyQuestion,
+  questionType,
+  identifyingType,
+) => {
+  const prefix = questionType || "identifying";
+  let output = `${prefix},${isKeyQuestion},\"${question}\",\"${alias}\"`;
+
+  if (questionType === "identifying") {
+    output += `,${identifyingType || "name"}`;
+  }
+
+  return output;
+};
+
 export const generateYesNoOutput = (
   question,
   alias,

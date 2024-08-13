@@ -1,4 +1,5 @@
 import {
+  generateBasicOutput,
   generateYesNoOutput,
   generateNumberOutput,
   generateSingleSelectOutput,
@@ -7,6 +8,23 @@ import {
 import { Checkbox } from "../components/FormComponents";
 
 export const questionTypes = {
+  basic: {
+    type: "basic",
+    initialQuestion: "What is your name?",
+    initialAlias: "Name",
+    options: {
+      questionTypes: [
+        { value: "identifying", label: "Identifying" },
+        { value: "behavioral", label: "Behavioral" },
+      ],
+      identifyingTypes: [
+        { value: "name", label: "Name" },
+        { value: "email", label: "Email" },
+        { value: "phone", label: "Phone" },
+      ],
+    },
+    generateOutput: generateBasicOutput,
+  },
   yes_no: {
     type: "yes_no",
     initialQuestion: "Are you currently at least 18 years old?",

@@ -5,8 +5,29 @@ export default function Home() {
   return (
     <main className="container mx-auto flex min-h-screen max-w-screen-lg flex-col gap-y-12 p-4">
       <h1 className="text-2xl">Upwage Question Builder</h1>
-      <Tabs defaultValue="yes_no" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-4">
+      <Tabs defaultValue="basic" className="w-full">
+        <TabsList className="grid h-auto w-full grid-cols-5">
+          <TabsTrigger
+            value="basic"
+            className="flex flex-col items-center justify-center gap-1"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="sm:mb-1"
+            >
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            <span className="text-xs">Basic</span>
+          </TabsTrigger>
           <TabsTrigger
             value="yes_no"
             className="flex flex-col items-center justify-center gap-1"
@@ -95,6 +116,9 @@ export default function Home() {
             <span className="text-xs">Multi Select</span>
           </TabsTrigger>
         </TabsList>
+        <TabsContent value="basic">
+          <QuestionForm type="basic" />
+        </TabsContent>
         <TabsContent value="yes_no">
           <QuestionForm type="yes_no" />
         </TabsContent>
