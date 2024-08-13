@@ -16,7 +16,7 @@ export const QuestionForm = ({ type }) => {
   const [showDetails, setShowDetails] = useState(true);
   const [copyStatus, setCopyStatus] = useState("Copy");
   const [allowDecimals, setAllowDecimals] = useState(
-    config.options.allowDecimals,
+    config.options.allowDecimals || false,
   );
   const [choices, setChoices] = useState(
     config.options.answerOptions || [{ value: "", label: "" }],
@@ -285,6 +285,8 @@ export const QuestionForm = ({ type }) => {
             config.options.renderAdditionalOptions(
               allowDecimals,
               setAllowDecimals,
+              conditions,
+              setConditions,
             )}
         </div>
       </div>
@@ -336,6 +338,7 @@ export const QuestionForm = ({ type }) => {
                     options={{
                       ...config.options,
                       answerOptions: choices,
+                      allowDecimals: allowDecimals,
                     }}
                     index={index}
                   />

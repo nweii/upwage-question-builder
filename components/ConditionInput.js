@@ -1,5 +1,11 @@
 import React from "react";
-import { CustomSelect, TextInput, Button, Checkbox } from "./FormComponents";
+import {
+  CustomSelect,
+  TextInput,
+  NumberInput,
+  Button,
+  Checkbox,
+} from "./FormComponents";
 
 const ConditionInput = ({
   type,
@@ -8,6 +14,7 @@ const ConditionInput = ({
   onChange,
   onRemove,
   index,
+  allowDecimals,
 }) => {
   const handleChange = (field, value) => {
     onChange({ ...condition, [field]: value });
@@ -26,11 +33,12 @@ const ConditionInput = ({
         );
       case "number":
         return (
-          <TextInput
+          <NumberInput
             value={condition.value}
-            onChange={(e) => handleChange("value", e.target.value)}
-            type={options.allowDecimals ? "number" : "text"}
-            step={options.allowDecimals ? "0.01" : "1"}
+            onChange={(e) => {
+              handleChange("value", e.target.value);
+            }}
+            allowDecimals={options.allowDecimals}
           />
         );
       case "single_select":

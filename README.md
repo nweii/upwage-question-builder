@@ -9,5 +9,5 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 - [x] Add text field to specify short question alias
 - [x] Add multiple choice question types (single and multi select)
 - [x] Reduce repetitive areas
-- [ ] Make decimals checkbox functional
+- [x] Make decimals checkbox functional
 - [x] Make basic form type

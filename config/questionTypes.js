@@ -70,7 +70,9 @@ export const questionTypes = {
         <Checkbox
           label="Allow decimals"
           checked={allowDecimals}
-          onChange={(e) => setAllowDecimals(e.target.checked)}
+          onChange={(e) => {
+            setAllowDecimals(e.target.checked);
+          }}
         />
       ),
     },

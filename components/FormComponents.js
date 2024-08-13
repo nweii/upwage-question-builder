@@ -16,6 +16,50 @@ export const TextInput = forwardRef(
 
 TextInput.displayName = "TextInput";
 
+export const NumberInput = forwardRef(
+  (
+    {
+      value,
+      onChange,
+      onKeyDown,
+      placeholder,
+      className,
+      allowDecimals,
+      ...props
+    },
+    ref,
+  ) => {
+    const handleChange = (e) => {
+      let newValue = e.target.value;
+      if (!allowDecimals) {
+        newValue = Math.floor(parseFloat(newValue)).toString();
+      }
+      onChange({ target: { value: newValue } });
+    };
+
+    // Floor the initial value if decimals are not allowed
+    const displayValue = allowDecimals
+      ? value
+      : Math.floor(parseFloat(value)).toString();
+
+    return (
+      <input
+        type="number"
+        value={displayValue}
+        onChange={handleChange}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+        className={`flex-grow rounded-md border border-gray-300 bg-zinc-50 px-3 py-2 focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 ${className}`}
+        ref={ref}
+        step={allowDecimals ? "0.01" : "1"}
+        {...props}
+      />
+    );
+  },
+);
+
+NumberInput.displayName = "NumberInput";
+
 export const CustomSelect = ({
   value,
   onChange,
