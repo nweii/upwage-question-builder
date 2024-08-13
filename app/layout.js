@@ -15,6 +15,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="/upwage-favicon.png"
+          rel="shortcut icon"
+          type="image/x-icon"
+        />
+      </head>
       <body className={`${poppins.className} py-12`}>{children}</body>
     </html>
   );
