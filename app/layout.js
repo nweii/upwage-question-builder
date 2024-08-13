@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="robots" content="noindex, nofollow" />
-        <link href="/upwage-favicon.png" rel="shortcut icon" type="image/png" />
+        <link href="/upwage-favicon.png" rel="icon" type="image/png" />
       </head>
       <body className={`${poppins.className} py-12`}>{children}</body>
     </html>
