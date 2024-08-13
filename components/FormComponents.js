@@ -14,6 +14,8 @@ export const TextInput = forwardRef(
   ),
 );
 
+TextInput.displayName = "TextInput";
+
 export const CustomSelect = ({
   value,
   onChange,
