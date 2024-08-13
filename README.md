@@ -10,3 +10,4 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 - [x] Add multiple choice question types (single and multi select)
 - [x] Reduce repetitive areas
 - [ ] Make decimals checkbox functional
+- [x] Make basic form type
