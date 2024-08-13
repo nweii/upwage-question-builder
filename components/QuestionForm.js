@@ -354,7 +354,7 @@ export const QuestionForm = ({ type }) => {
         <textarea
           value={output}
           readOnly
-          className="mb-2 w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm italic focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
+          className="mb-2 w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-accent focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
           rows={3}
         />
         <Button onClick={handleCopying} variant="primary">
