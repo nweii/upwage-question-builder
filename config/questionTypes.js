@@ -5,7 +5,6 @@ import {
   generateSingleSelectOutput,
   generateMultiSelectOutput,
 } from "../utils/outputGenerators";
-import { Checkbox } from "../components/FormComponents";
 
 export const questionTypes = {
   basic: {
