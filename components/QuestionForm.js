@@ -277,11 +277,13 @@ export const QuestionForm = ({ type }) => {
             checked={isKeyQuestion}
             onChange={(e) => setIsKeyQuestion(e.target.checked)}
           />
-          {config.options.renderAdditionalOptions &&
-            config.options.renderAdditionalOptions(
-              allowDecimals,
-              setAllowDecimals,
-            )}
+          {type === "number" && (
+            <Checkbox
+              label="Allow decimals"
+              checked={allowDecimals}
+              onChange={(e) => setAllowDecimals(e.target.checked)}
+            />
+          )}
         </div>
       </div>
       {type === "basic" && renderBasicTypeInputs()}

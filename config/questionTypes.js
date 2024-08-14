@@ -66,15 +66,6 @@ export const questionTypes = {
           label: "is less than or equal to",
         },
       ],
-      renderAdditionalOptions: (allowDecimals, setAllowDecimals) => (
-        <Checkbox
-          label="Allow decimals"
-          checked={allowDecimals}
-          onChange={(e) => {
-            setAllowDecimals(e.target.checked);
-          }}
-        />
-      ),
     },
     generateOutput: generateNumberOutput,
   },
