@@ -47,7 +47,10 @@ export default function Home() {
               <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
               <path d="m9 12 2 2 4-4" />
             </svg>
-            <span className="text-xs">Yes/No</span>
+            <span className="text-xs">
+              <span className="sm:hidden">Y/N</span>
+              <span className="hidden sm:inline">Yes/No</span>
+            </span>
           </TabsTrigger>
           <TabsTrigger
             value="number"
@@ -91,7 +94,10 @@ export default function Home() {
               <circle cx="12" cy="12" r="10" />
               <circle cx="12" cy="12" r="1" />
             </svg>
-            <span className="text-xs">Single Select</span>
+            <span className="text-xs">
+              Single
+              <span className="hidden sm:inline"> Select</span>
+            </span>
           </TabsTrigger>
           <TabsTrigger
             value="multi_select"
@@ -113,7 +119,10 @@ export default function Home() {
               <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
               <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
             </svg>
-            <span className="text-xs">Multi Select</span>
+            <span className="text-xs">
+              Multi
+              <span className="hidden sm:inline"> Select</span>
+            </span>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="basic">

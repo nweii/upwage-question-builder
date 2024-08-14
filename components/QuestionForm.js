@@ -99,7 +99,7 @@ export const QuestionForm = ({ type }) => {
 
   const renderBasicTypeInputs = () => {
     return (
-      <div className="mt-4 flex items-center gap-4">
+      <div className="mt-4 flex items-end gap-4">
         <div className="flex flex-col">
           <label className="mb-2 block font-bold">Type</label>
           <CustomSelect
@@ -252,8 +252,8 @@ export const QuestionForm = ({ type }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <div className="flex grow flex-col">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <div className="flex w-full grow flex-col sm:w-auto">
             <label className="mb-2 block font-bold">Question</label>
             <TextInput
               value={question}
@@ -261,7 +261,7 @@ export const QuestionForm = ({ type }) => {
               placeholder="Enter your question"
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex w-full flex-col sm:w-auto">
             <label className="mb-2 block w-full font-bold">Alias</label>
             <TextInput
               value={alias}
