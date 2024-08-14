@@ -123,6 +123,7 @@ export const QuestionForm = ({ type }) => {
   };
 
   const renderChoices = () => {
+    // Decorative shapes to indicate choice type (single or multi)
     const LittleCircle = () => (
       <svg
         width="12"
