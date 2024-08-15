@@ -2,6 +2,19 @@
 
 Question-building tool for Upwage LLM-powered screeners. Specify your question and its qualifying answer conditions to receive an easy-to-copy, logic-laden string of the question.
 
+- Support for multiple question types: Basic, Yes/No, Number, Single Select, Multi Select
+- Dynamic form generation based on question type
+- Conditional logic for qualifying answers
+- Output generation in a specific format for LLM processing
+
+## Structure
+
+- `QuestionForm.js`: The core component for building questions
+- `ConditionInput.js`: Component for inputting qualifying conditions
+- `FormComponents.js`: Various form input components (TextInput, NumberInput, CustomSelect, etc.)
+- `questionTypes.js`: Configuration for different question types and their default properties
+- `outputGenerators.js`: Functions for generating output strings based on question type
+
 ## To Do
 
 - [x] Fix combinator behavior (currently changes all combinators to the same value)
@@ -11,3 +24,11 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 - [x] Reduce repetitive areas
 - [x] Make decimals checkbox functional
 - [x] Make basic form type
+
+## Stack
+
+- Next.js
+- React
+- Tailwind CSS
+- Shadcn for tabs UI
+- Lucide for icons
