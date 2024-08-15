@@ -3,7 +3,7 @@ import QuestionForm from "/components/QuestionForm";
 
 export default function Home() {
   return (
-    <main className="container mx-auto flex min-h-screen max-w-screen-lg flex-col gap-y-12 p-4">
+    <main className="container mx-auto flex min-h-screen max-w-screen-lg flex-col gap-y-8 p-4">
       <h1 className="text-2xl">Upwage Question Builder</h1>
       <Tabs defaultValue="basic" className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-5">
