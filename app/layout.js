@@ -19,7 +19,19 @@ export default function RootLayout({ children }) {
         <meta name="robots" content="noindex, nofollow" />
         <link href="/upwage-favicon.png" rel="icon" type="image/png" />
       </head>
-      <body className={`${poppins.className} py-12`}>{children}</body>
+      <body className={`${poppins.className} py-6`}>
+        {children}
+        <footer className="pb-4 text-center text-sm text-zinc-500">
+          <a
+            href="https://github.com/nweii/upwage-question-builder/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-700 hover:underline"
+          >
+            View on GitHub
+          </a>
+        </footer>
+      </body>
     </html>
   );
 }
