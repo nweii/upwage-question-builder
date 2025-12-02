@@ -32,3 +32,11 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 - Tailwind CSS
 - Shadcn for tabs UI
 - Lucide for icons
+
+## Development
+
+- **Install dependencies**: `bun install`
+- **Run dev server**: `bun run dev`
+- **Build for production**: `bun run build`
+- **Start production server**: `bun run start`
+- **Run linting**: `bun run lint`
