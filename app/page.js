@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import QuestionForm from "/components/QuestionForm";
+import QuestionForm from "@/components/QuestionForm";
 
 export default function Home() {
   return (

@@ -36,7 +36,7 @@ Question-building tool for Upwage LLM-powered screeners. Specify your question a
 ## Development
 
 - **Install dependencies**: `bun install`
-- **Run dev server**: `bun run dev`
+- **Run dev server**: `bun dev`
 - **Build for production**: `bun run build`
 - **Start production server**: `bun run start`
 - **Run linting**: `bun run lint`

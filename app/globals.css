@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
 
 @layer base {
   :root {
@@ -65,7 +64,7 @@
     @apply bg-zinc-50 text-base text-black dark:bg-zinc-800 dark:text-white/80;
   }
   hr {
-    @apply my-6 border-black border-opacity-20 dark:border-white dark:border-opacity-20;
+    @apply my-6 border-black/20 dark:border-white/20;
   }
 }
 
